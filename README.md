@@ -20,10 +20,13 @@ Sal needs a few main features to crank out a video:
 ## Drawing
 
 * http://codetheory.in/html5-canvas-drawing-lines-with-smooth-edges/
+* http://jolierouge.net/2013/09/html5-canvas-smooth-variable-width-lines-with-transparency/
+  * https://github.com/jasonknight/jwacom
 * Undo / Redo
 * Cut / Paste
 * Switch Colors
 * Infinite canvas size
+* Choice of resolution: Auto, 720p, 1080p...
 
 ## Recording the screen
 

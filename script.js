@@ -30,13 +30,15 @@
 		mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
 	}, false);
 	
-	
 	/* Drawing on Paint App */
 	tmp_ctx.lineWidth = 5;
 	tmp_ctx.lineJoin = 'round';
 	tmp_ctx.lineCap = 'round';
-	tmp_ctx.strokeStyle = 'blue';
-	tmp_ctx.fillStyle = 'blue';
+	tmp_ctx.strokeStyle = '#26a2ad';
+	tmp_ctx.fillStyle = '#26a2ad';
+	// Teeny blur = "anti-aliasing"?
+	// tmp_ctx.shadowBlur = 1;
+	// tmp_ctx.shadowColor = '#26a2ad';
 	
 	tmp_canvas.addEventListener('mousedown', function(e) {
 		tmp_canvas.addEventListener('mousemove', onPaint, false);

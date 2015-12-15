@@ -1,5 +1,35 @@
-<link rel="stylesheet" type="text/css" href="./style.css">
-<div id="sketch">
-	<canvas id="paint"></canvas>
-</div>
-<script type="text/javascript" src="./script.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Khan-Draw</title>
+	<link rel="stylesheet" type="text/css" href="./style.css">
+</head>
+<body>
+	<div id="tools">
+		<img src="./leaf-green.svg" width="62" height="62">
+		<span class="color" style="background-color: #FE7A25;">1</span>
+		<span class="color" style="background-color: #B70D18;">2</span>
+		<span class="color" style="background-color: #FFCE41;">3</span>
+		<span class="color" style="background-color: #2D6770;">4</span>
+		<span class="color" style="background-color: #98C409;">5</span>
+		<span class="color" style="background-color: #26a2ad;">6</span>
+		<span class="color" style="background-color: #bccf5b;">7</span>
+		<span class="color" style="background-color: #ad13b4;">8</span>
+		<span class="color" style="background-color: #dae354;">9</span>
+		<span class="color" style="background-color: #d5a0d2;">0</span>
+		<span class="tool">select</span>
+		<span class="tool">cut</span>
+		<span class="tool">copy</span>
+		<span class="tool">paste</span>
+		<span class="tool">erase</span>
+		<span class="tool">drag</span>
+		<span class="tool">720p</span>
+		<span class="tool">720p</span>
+	</div>
+	<div id="sketch">
+		<canvas id="paint"></canvas>
+		<!-- tmp_canvas is injected here -->
+	</div>
+	<script type="text/javascript" src="./script.js"></script>
+</body>
+</html>

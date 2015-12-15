@@ -1,17 +1,22 @@
-html, body {
-	width: 100%;
-	height: 100%;
-}
-
+html { font-family: sans-serif; }
+html, body { margin: 0; padding: 0; border: 0; width: 100%; height: 100%; }
+/* Toolbar */
+#tools        { position: absolute; top: 0; left: 0; width: 66px; bottom: 0; background-color: #222222; }
+#tools *      { float: left; margin: 2px 0 0 2px; cursor: pointer; }
+#tools span   { height: 30px; text-align: center; line-height: 30px; color: #FFFFFF; text-shadow: 1px 1px rgba(0, 0, 0, 0.5); }
+#tools .color { width: 30px; }
+#tools .tool  { width: 62px; background: #000000; color: #666666; }
+/* Stage */
+#sketch     { position: absolute; top: 0; left: 66px; right: 0; bottom: 0; background-color: #CCCCCC; }
+#tmp_canvas { position: absolute; left: 0px; right: 0; bottom: 0; top: 0; cursor: crosshair; }
+#paint      { background-color: #000000; }
+/* Canvas Max 720p
 #sketch {
+	
+	width: 1280px;
+	height: 720px;
+	margin: 5px;
 	border: 10px solid gray;
-	height: 100%;
 	position: relative;
 }
-
-#tmp_canvas {
-	position: absolute;
-	left: 0px; right: 0;
-	bottom: 0; top: 0;
-	cursor: crosshair;
-}
+ */
