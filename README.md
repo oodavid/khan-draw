@@ -8,6 +8,8 @@ replicates the style and functionality of Salman
 Khan's toolkit. Remember kids, imitation is the
 sincerest form of flattery!
 
+![Demo](https://raw.githubusercontent.com/oodavid/khan-draw/master/demo.gif)
+
 ## Features
 
 Sal needs a few main features to crank out a video:
