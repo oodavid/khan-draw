@@ -1,6 +1,63 @@
 (function() {
+	// Tools, Shortcuts, Auto-Click #1
+	$(document).ready(function(e){
+		$('#tools').on('click', '.color', function(e){
+			setColor($(this).css('background-color'));
+		});
+		$('#start').on('click', startRecording);
+		$('#stop').on('click', stopRecording);
+		$('#info').on('click', showInfo);
+		$('#info-close').on('click', hideInfo);
+		$(document).on('keydown', function(e){
+			$('.color:contains("'+(e.which-48)+'")').click(); // 48-57 = 0-9
+		});
+		$('.color:contains("1")').click();
+	});
+	function setColor(color){
+		tmp_ctx.strokeStyle = color;
+		tmp_ctx.fillStyle   = color;
+		$('#logo').css('background-color', color);
+	}
+	var startTime;
+	var timerInterval;
+	function startRecording(){
+		$('#start').hide();
+		$('#stop').show();
+		startTime = Date.now();
+		if(timerInterval){ clearInterval(timerInterval); }
+		timerInterval = setInterval(renderTime, 50);
+	}
+	function stopRecording(){
+		$('#stop').hide();
+		$('#start').show();
+		if(timerInterval){ clearInterval(timerInterval); }
+	}
+	function renderTime(){
+		if(startTime){
+			var s = Math.round((Date.now()-startTime)/1000);
+			var h = Math.floor(s/3600); s -= (h*3600);
+			var m = Math.floor(s/60);   s -= (m*60);
+			h = ('00'+h).substr(-2);
+			m = ('00'+m).substr(-2);
+			s = ('00'+s).substr(-2);
+			$('#time').text(h+':'+m+':'+s);
+		}
+		setVolumePct(100*Math.random());
+	}
+	function setVolumePct(pct){
+		$('#volume').css('width', pct+'%');
+	}
+	function showInfo(){
+		$('#info-popup').show();
+	}
+	function hideInfo(){
+		$('#info-popup').hide();
+	}
 	
-	var canvas = document.querySelector('#paint');
+
+	// Smooth drawing from http://codetheory.in/html5-canvas-drawing-lines-with-smooth-edges/
+
+	var canvas = document.querySelector('#canvas');
 	var ctx = canvas.getContext('2d');
 	
 	var sketch = document.querySelector('#sketch');
@@ -31,14 +88,9 @@
 	}, false);
 	
 	/* Drawing on Paint App */
-	tmp_ctx.lineWidth = 5;
-	tmp_ctx.lineJoin = 'round';
-	tmp_ctx.lineCap = 'round';
-	tmp_ctx.strokeStyle = '#26a2ad';
-	tmp_ctx.fillStyle = '#26a2ad';
-	// Teeny blur = "anti-aliasing"?
-	// tmp_ctx.shadowBlur = 1;
-	// tmp_ctx.shadowColor = '#26a2ad';
+	tmp_ctx.lineWidth  = 3;
+	tmp_ctx.lineJoin   = 'round';
+	tmp_ctx.lineCap    = 'round';
 	
 	tmp_canvas.addEventListener('mousedown', function(e) {
 		tmp_canvas.addEventListener('mousemove', onPaint, false);

@@ -6,30 +6,43 @@
 </head>
 <body>
 	<div id="tools">
-		<img src="./leaf-green.svg" width="62" height="62">
-		<span class="color" style="background-color: #FE7A25;">1</span>
-		<span class="color" style="background-color: #B70D18;">2</span>
+		<img id="logo" src="./logo.png" style="background-color: #9CB53B;" width="66" height="66">
+		<span class="color" style="background-color: #9CB53B;">1</span><!-- Khan Academy Green -->
+		<span class="color" style="background-color: #d5a0d2;">2</span>
 		<span class="color" style="background-color: #FFCE41;">3</span>
-		<span class="color" style="background-color: #2D6770;">4</span>
-		<span class="color" style="background-color: #98C409;">5</span>
-		<span class="color" style="background-color: #26a2ad;">6</span>
-		<span class="color" style="background-color: #bccf5b;">7</span>
-		<span class="color" style="background-color: #ad13b4;">8</span>
-		<span class="color" style="background-color: #dae354;">9</span>
-		<span class="color" style="background-color: #d5a0d2;">0</span>
-		<span class="tool">select</span>
-		<span class="tool">cut</span>
-		<span class="tool">copy</span>
-		<span class="tool">paste</span>
-		<span class="tool">erase</span>
-		<span class="tool">drag</span>
-		<span class="tool">720p</span>
-		<span class="tool">720p</span>
+		<span class="color" style="background-color: #B5683B;">4</span>
+		<span class="color" style="background-color: #b53b71;">5</span>
+		<span class="color" style="background-color: #FE7A25;">6</span>
+		<span class="color" style="background-color: #9f2e2e;">7</span>
+		<span class="color" style="background-color: #2D6770;">8</span>
+		<span class="color" style="background-color: #26a2ad;">9</span>
+		<span class="color" style="background-color: #ad13b4;">0</span>
+		<div class="clear"></div>
+		<div id="start">record</div>
+		<div id="stop">stop</div>
+		<div id="time">00:00:00</div>
+		<div id="volume"></div>
+		<span id="info">i</span>
 	</div>
 	<div id="sketch">
-		<canvas id="paint"></canvas>
+		<canvas id="canvas"></canvas>
 		<!-- tmp_canvas is injected here -->
 	</div>
+	<div id="info-popup">
+		<div>
+			<div id="info-close">&times;</div>
+			<h1>Khan-Draw</h1>
+			<p>This is just a fun widget to tinker with, however it has scope to try out new technologies...</p>
+			<ul>
+				<li><a href="http://www.webrtc.org/">Web RTC</a></li>
+				<li><a href="https://github.com/jasonknight/jwacom">Tablet Integration</a></li>
+			</ul>
+			<p>The idea is to make an online software variant that replicates the style and functionality of Salman Khan's toolkit. Remember kids, imitation is the sincerest form of flattery!</p>
+			<p>Made by <a href="http://oodavid.com" target="_blank">oodavid.com</a></p>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="./jquery-1.9.1.min.js"></script>
 	<script type="text/javascript" src="./script.js"></script>
 </body>
 </html>

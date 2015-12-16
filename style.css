@@ -1,22 +1,31 @@
 html { font-family: sans-serif; }
 html, body { margin: 0; padding: 0; border: 0; width: 100%; height: 100%; }
+body { -webkit-user-select: none; user-select: none; color: #FFFFFF; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5); background-color: #222222; }
+div.clear { clear: both; }
 /* Toolbar */
-#tools        { position: absolute; top: 0; left: 0; width: 66px; bottom: 0; background-color: #222222; }
-#tools *      { float: left; margin: 2px 0 0 2px; cursor: pointer; }
-#tools span   { height: 30px; text-align: center; line-height: 30px; color: #FFFFFF; text-shadow: 1px 1px rgba(0, 0, 0, 0.5); }
-#tools .color { width: 30px; }
-#tools .tool  { width: 62px; background: #000000; color: #666666; }
+#tools        { position: absolute; top: 0; left: 0; width: 66px; bottom: 0; text-align: center; }
+#tools img    { float: left; }
+#tools .color { float: left; width: 30px; height: 30px; line-height: 30px; margin: 2px 0 0 2px; cursor: pointer; }
+#start,
+#stop   { margin: 20px 2px 0 2px; line-height: 30px; border-radius: 15px; cursor: pointer; }
+#start  { background-color: #777777; }
+#stop   { display: none; background-color: #BB2222; }
+#volume { background-color: #9CB53B; height: 2px; width: 50%; margin: 2px auto 0 auto; }
+#time   { padding-top: 4px; font-size: 14px; }
+#info   { display: block; width: 30px; height: 30px; line-height: 30px; border-radius: 15px; margin: 20px auto 0 auto; background-color: #275298; cursor: pointer; }
 /* Stage */
-#sketch     { position: absolute; top: 0; left: 66px; right: 0; bottom: 0; background-color: #CCCCCC; }
+#sketch     { position: absolute; top: 0; left: 66px; right: 0; bottom: 0; }
+#canvas     { background-color: #000000; }
 #tmp_canvas { position: absolute; left: 0px; right: 0; bottom: 0; top: 0; cursor: crosshair; }
-#paint      { background-color: #000000; }
-/* Canvas Max 720p
-#sketch {
-	
-	width: 1280px;
-	height: 720px;
-	margin: 5px;
-	border: 10px solid gray;
-	position: relative;
-}
- */
+/* Popup */
+#info-popup { display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.8); }
+#info-popup > div { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; padding: 1px; background-color: #000000; box-shadow: 0 0 15px 1px #9CB53B; border-radius: 5px; max-height: 300px; overflow-y: auto; overflow-x: hidden; }
+#info-close { position: absolute; top: 5px; right: 5px; width: 40px; height: 20px; line-height: 20px; border-radius: 10px; background-color: #9CB53B; cursor: pointer; text-align: center; }
+#info-popup h1,
+#info-popup h2,
+#info-popup p { margin: 10px; }
+#info-popup a { color: #9CB53B; text-decoration: none; }
+#info-popup > div::-webkit-scrollbar            { -webkit-appearance: none; }
+#info-popup > div::-webkit-scrollbar:vertical   { width: 10px; }
+#info-popup > div::-webkit-scrollbar:horizontal { height: 10px; }
+#info-popup > div::-webkit-scrollbar-thumb      { border-radius: 5px; border: 2px solid #000000; background-color: rgba(156, 181, 59, .5); }

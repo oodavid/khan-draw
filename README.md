@@ -5,7 +5,7 @@ has scope to try out new technologies...
 
 The idea is to make an online software variant that
 replicates the style and functionality of Salman
-Khan's toolkit. Rremember kids, imitation is the
+Khan's toolkit. Remember kids, imitation is the
 sincerest form of flattery!
 
 ## Features
