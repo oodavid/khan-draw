@@ -1,36 +1,109 @@
+console.log('todo: prevent color change during draw');
+console.log('todo: get ffmpeg.js working :)');
 (function() {
 	// Tools, Shortcuts, Auto-Click #1
 	$(document).ready(function(e){
-		$('#tools').on('click', '.color', function(e){
-			setColor($(this).css('background-color'));
-		});
-		$('#start').on('click', startRecording);
+		$('#tools').on('click', '.color', colorClick);
+		prepareRecorder();
+		$('#start').on('click', startCountdown);
+		$('#count').on('click', cancelCountdown);
 		$('#stop').on('click', stopRecording);
 		$('#info').on('click', showInfo);
 		$('#info-close').on('click', hideInfo);
-		$(document).on('keydown', function(e){
-			$('.color:contains("'+(e.which-48)+'")').click(); // 48-57 = 0-9
-		});
+		storeCanvasPosition();
+		$(document).on('keydown', keyDown);
+		$('#sketch').on('mousedown', startDrawing);
+		$(document).on('mousemove',  updateDrawing);
+		$(document).on('mouseup',    endDrawing);
 		$('.color:contains("1")').click();
 	});
+	// Color selection
+	var selectedColor = null; // A number from 0-9
+	function colorClick(el){
+		setColor($(this).css('background-color'));
+		selectedColor = parseInt($(this).text(), 10);
+	}
 	function setColor(color){
-		tmp_ctx.strokeStyle = color;
-		tmp_ctx.fillStyle   = color;
+		ctx2.strokeStyle = color;
+		ctx2.fillStyle   = color;
+		ctx2.shadowColor = color;
 		$('#logo').css('background-color', color);
 	}
-	var startTime;
-	var timerInterval;
+	// Countdown
+	var countDown;
+	function startCountdown(){
+		$('#start, #stop').hide();
+		$('#count').text(3).show();
+		countDown = setInterval(function(){
+			var n = parseInt($('#count').text(), 10);
+			if(n > 1){
+				$('#count').text(--n);
+			} else {
+				startRecording();
+				clearInterval(countDown);
+			}
+		}, 1000);
+	}
+	function cancelCountdown(){
+		clearInterval(countDown);
+		$('#stop, #count').hide();
+		$('#start').show();
+		stopTimer();
+	}
+	// Video recording
+	var recordAudio;
+	var canvasRecorder;
+	function prepareRecorder(){
+		canvasRecorder = RecordRTC($('#sketch')[0], {
+			type: 'canvas',
+			grabMouse: false
+		});
+	}
 	function startRecording(){
-		$('#start').hide();
-		$('#stop').show();
-		startTime = Date.now();
-		if(timerInterval){ clearInterval(timerInterval); }
-		timerInterval = setInterval(renderTime, 50);
+		// Request access to the microphone, then begin
+		navigator.getUserMedia({ audio: true }, function(stream) {
+			recordAudio = RecordRTC(stream, {
+				type: 'audio',
+				numberOfAudioChannels: 1
+				// recorderType: StereoAudioRecorder, // force WebAudio for all browsers even for Firefox/MS-Edge
+			});
+			recordAudio.initRecorder(function() {
+				canvasRecorder.startRecording();
+				recordAudio.startRecording();
+			});
+			// UI
+			$('#start, #count').hide();
+			$('#stop').show();
+			startTimer();
+		}, function(error){
+			console.log(error);
+		});
 	}
 	function stopRecording(){
-		$('#stop').hide();
+		// UI
+		$('#stop, #count').hide();
 		$('#start').show();
-		if(timerInterval){ clearInterval(timerInterval); }
+		stopTimer();
+		// Stop the audio + video
+		recordAudio.stopRecording(function(urlA){
+			canvasRecorder.stopRecording(function(urlV){
+				window.open(urlA);
+				window.open(urlV);
+			});
+		});
+	}
+	// Timer 12:34:56
+	var startTime;
+	var timerInterval;
+	function startTimer(){
+		stopTimer();
+		startTime = Date.now();
+		timerInterval = setInterval(renderTime, 50);
+	}
+	function stopTimer(){
+		if(timerInterval){
+			clearInterval(timerInterval);
+		}
 	}
 	function renderTime(){
 		if(startTime){
@@ -44,6 +117,7 @@
 		}
 		setVolumePct(100*Math.random());
 	}
+	// Volume
 	function setVolumePct(pct){
 		$('#volume').css('width', pct+'%');
 	}
@@ -53,107 +127,135 @@
 	function hideInfo(){
 		$('#info-popup').hide();
 	}
+	// Keyboard
+	function keyDown(e){
+		if(e.which >=48 && e.which <= 57){ // Numbers 0-9
+			$('.color:contains("'+(e.which-48)+'")').click();
+		} else if(e.which == 9){
+			selectedColor += (e.shiftKey ? -1 : 1);
+			selectedColor = (10+selectedColor)%10;
+			$('.color:contains("'+selectedColor+'")').click();
+			e.preventDefault();
+			return false;
+		}
+	}
 	
-
-	// Smooth drawing from http://codetheory.in/html5-canvas-drawing-lines-with-smooth-edges/
-
-	var canvas = document.querySelector('#canvas');
-	var ctx = canvas.getContext('2d');
 	
-	var sketch = document.querySelector('#sketch');
-	var sketch_style = getComputedStyle(sketch);
-	canvas.width = parseInt(sketch_style.getPropertyValue('width'));
-	canvas.height = parseInt(sketch_style.getPropertyValue('height'));
-	
-	
-	// Creating a tmp canvas
-	var tmp_canvas = document.createElement('canvas');
-	var tmp_ctx = tmp_canvas.getContext('2d');
-	tmp_canvas.id = 'tmp_canvas';
-	tmp_canvas.width = canvas.width;
-	tmp_canvas.height = canvas.height;
-	
-	sketch.appendChild(tmp_canvas);
-
-	var mouse = {x: 0, y: 0};
-	var last_mouse = {x: 0, y: 0};
-	
-	// Pencil Points
-	var ppts = [];
-	
-	/* Mouse Capturing Work */
-	tmp_canvas.addEventListener('mousemove', function(e) {
-		mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
-		mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
-	}, false);
-	
-	/* Drawing on Paint App */
-	tmp_ctx.lineWidth  = 3;
-	tmp_ctx.lineJoin   = 'round';
-	tmp_ctx.lineCap    = 'round';
-	
-	tmp_canvas.addEventListener('mousedown', function(e) {
-		tmp_canvas.addEventListener('mousemove', onPaint, false);
-		
-		mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
-		mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
-		
-		ppts.push({x: mouse.x, y: mouse.y});
-		
-		onPaint();
-	}, false);
-	
-	tmp_canvas.addEventListener('mouseup', function() {
-		tmp_canvas.removeEventListener('mousemove', onPaint, false);
-		
-		// Writing down to real canvas now
-		ctx.drawImage(tmp_canvas, 0, 0);
-		// Clearing tmp canvas
-		tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
-		
-		// Emptying up Pencil Points
-		ppts = [];
-	}, false);
-	
-	var onPaint = function() {
-		
-		// Saving all the points in an array
-		ppts.push({x: mouse.x, y: mouse.y});
-		
-		if (ppts.length < 3) {
-			var b = ppts[0];
-			tmp_ctx.beginPath();
-			//ctx.moveTo(b.x, b.y);
-			//ctx.lineTo(b.x+50, b.y+50);
-			tmp_ctx.arc(b.x, b.y, tmp_ctx.lineWidth / 2, 0, Math.PI * 2, !0);
-			tmp_ctx.fill();
-			tmp_ctx.closePath();
-			
+	// Reference both canvases, define the initial stroke
+	var canvas  = document.querySelector('#canvas');
+	var ctx     = canvas.getContext('2d');
+	var canvas2 = document.querySelector('#canvas2');
+	var ctx2    = canvas2.getContext('2d');
+		ctx2.lineWidth   = 2;
+		ctx2.lineJoin    = 'round';
+		ctx2.lineCap     = 'round';
+		ctx2.strokeStyle = 'blue';
+		ctx2.fillStyle   = 'blue';
+		ctx2.shadowColor = 'blue';
+		ctx2.shadowBlur  = 1;
+		ctx2.shadowOffsetX = 0;
+		ctx2.shadowOffsetY = 0;
+	// For tracking the state
+	var mouseX    = Infinity;
+	var mouseY    = Infinity;
+	var points    = [];
+	var lastPoint = {};
+	var lastAlt   = false;
+	// Cache the canvas position (no need to calculate every time)
+	var canvasX;
+	var canvasY;
+	function storeCanvasPosition(){
+		var o = $('#canvas').offset();
+		canvasX = o.left;
+		canvasY = o.top;
+	}
+	// Mapped to mouse events
+	var isDrawing = false;
+	function startDrawing(e){
+		if(!isDrawing){
+			isDrawing = true;
+			addPoint();
+			drawCurve();
+		}
+	}
+	function updateDrawing(e){
+		mouseX = (e.pageX-canvasX);
+		mouseY = (e.pageY-canvasY);
+		// HACK - holding the ALT key should also trigger drawings...
+		if(!isDrawing && !lastAlt && e.altKey){
+			startDrawing(e);
+		}
+		if(isDrawing){
+			addPoint();
+			drawCurve();
+		}
+		if(isDrawing && lastAlt && !e.altKey){
+			endDrawing(e);
+		}
+		moveCursor();
+		lastAlt = e.altKey;
+	}
+	function endDrawing(e){
+		if(isDrawing){
+			isDrawing = false;
+			drawFinalCurve();
+			clearPoints();
+		}
+	}
+	function moveCursor(){
+		$('#cursor').css({
+			'top':  (mouseY-6)+'px',
+			'left': (mouseX-6)+'px'
+		});
+	}
+	// Curve handling
+	function addPoint(){
+		if(mouseX != lastPoint.x || mouseY != lastPoint.y){
+			points.push({
+				x: mouseX,
+				y: mouseY,
+			});
+		}
+		lastPoint.x = mouseX;
+		lastPoint.y = mouseY;
+	}
+	function clearPoints(){
+		points.length = 0;
+		lastPoint.x = Infinity;
+		lastPoint.y = Infinity;
+	}
+	function drawFinalCurve(){
+		ctx.drawImage(canvas2, 0, 0); // Write down to real canvas
+		ctx2.clearRect(0, 0, canvas2.width, canvas2.height); // Clearing tmp canvas
+	}
+	function drawCurve(){
+		// Clear before drawing
+		ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+		// Quadratics after we have 3 points
+		if (points.length < 3) {
+			var b = points[0];
+			ctx2.beginPath();
+			ctx2.arc(b.x, b.y, ctx2.lineWidth / 2, 0, Math.PI * 2, !0);
+			ctx2.fill();
+			ctx2.closePath();
 			return;
 		}
-		
-		// Tmp canvas is always cleared up before drawing.
-		tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
-		
-		tmp_ctx.beginPath();
-		tmp_ctx.moveTo(ppts[0].x, ppts[0].y);
-		
-		for (var i = 1; i < ppts.length - 2; i++) {
-			var c = (ppts[i].x + ppts[i + 1].x) / 2;
-			var d = (ppts[i].y + ppts[i + 1].y) / 2;
-			
-			tmp_ctx.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
+		// Quadratics
+		ctx2.beginPath();
+		ctx2.moveTo(points[0].x, points[0].y);
+		for (var i = 1; i < points.length - 2; i++) {
+			var c = (points[i].x + points[i + 1].x) / 2;
+			var d = (points[i].y + points[i + 1].y) / 2;
+			ctx2.quadraticCurveTo(points[i].x, points[i].y, c, d);
 		}
-		
 		// For the last 2 points
-		tmp_ctx.quadraticCurveTo(
-			ppts[i].x,
-			ppts[i].y,
-			ppts[i + 1].x,
-			ppts[i + 1].y
+		ctx2.quadraticCurveTo(
+			points[i].x,
+			points[i].y,
+			points[i + 1].x,
+			points[i + 1].y
 		);
-		tmp_ctx.stroke();
-		
-	};
-	
+		ctx2.stroke();
+	}
+
 }());

@@ -6,43 +6,81 @@
 	<title>Khan-Draw</title>
 </head>
 <body>
-	<div id="tools">
-		<img id="logo" src="./logo.png" style="background-color: #9CB53B;" width="66" height="66">
-		<span class="color" style="background-color: #9CB53B;">1</span><!-- Khan Academy Green -->
-		<span class="color" style="background-color: #d5a0d2;">2</span>
-		<span class="color" style="background-color: #FFCE41;">3</span>
-		<span class="color" style="background-color: #B5683B;">4</span>
-		<span class="color" style="background-color: #b53b71;">5</span>
-		<span class="color" style="background-color: #FE7A25;">6</span>
-		<span class="color" style="background-color: #9f2e2e;">7</span>
-		<span class="color" style="background-color: #2D6770;">8</span>
-		<span class="color" style="background-color: #26a2ad;">9</span>
-		<span class="color" style="background-color: #ad13b4;">0</span>
-		<div class="clear"></div>
-		<div id="start">record</div>
-		<div id="stop">stop</div>
-		<div id="time">00:00:00</div>
-		<div id="volume"></div>
-		<span id="info">i</span>
-	</div>
-	<div id="sketch">
-		<canvas id="canvas"></canvas>
-		<!-- tmp_canvas is injected here -->
-	</div>
-	<div id="info-popup">
-		<div>
-			<div id="info-close">&times;</div>
-			<h1>Khan-Draw</h1>
-			<p>This is just a fun widget to tinker with, however it has scope to try out new technologies...</p>
-			<ul>
-				<li><a href="http://www.webrtc.org/">Web RTC</a></li>
-				<li><a href="https://github.com/jasonknight/jwacom">Tablet Integration</a></li>
-			</ul>
-			<p>The idea is to make an online software variant that replicates the style and functionality of Salman Khan's toolkit. Remember kids, imitation is the sincerest form of flattery!</p>
-			<p>Made by <a href="http://oodavid.com" target="_blank">oodavid.com</a></p>
+	<div id="container" style="position: relative; width: 706px; height: 480px; overflow: hidden; background-color: #222222;">
+		<div id="tools">
+			<img id="logo" src="./logo.png" style="background-color: #9CB53B;" width="66" height="66">
+			<span class="color" style="background-color: #9CB53B;">1</span><!-- Khan Academy Green -->
+			<span class="color" style="background-color: #d5a0d2;">2</span>
+			<span class="color" style="background-color: #FFCE41;">3</span>
+			<span class="color" style="background-color: #B5683B;">4</span>
+			<span class="color" style="background-color: #b53b71;">5</span>
+			<span class="color" style="background-color: #FE7A25;">6</span>
+			<span class="color" style="background-color: #9f2e2e;">7</span>
+			<span class="color" style="background-color: #2D6770;">8</span>
+			<span class="color" style="background-color: #26a2ad;">9</span>
+			<span class="color" style="background-color: #ad13b4;">0</span>
+			<div class="clear"></div>
+			<div id="start">record</div>
+			<div id="count">3</div>
+			<div id="stop">stop</div>
+			<div id="time">00:00:00</div>
+			<div id="volume"></div>
+			<span id="info">i</span>
+		</div>
+		<div id="sketch">
+			<canvas id="canvas" width="640" height="480"></canvas>
+			<canvas id="canvas2" width="640" height="480"></canvas>
+			<img id="cursor" src="./crosshair.png">
+			<!-- tmp_canvas is injected here -->
+		</div>
+		<div id="info-popup">
+			<div id="info-box">
+				<div id="info-close">&times;</div>
+				<div id="info-scroll">
+					<h1>Khan-Draw</h1>
+					<p>This is just a fun widget to tinker with newish technologies. The idea is to replicate the drawing software used on Khan Academy, except online. Remember kids, imitation is the sincerest form of flattery!</p>
+					<p>Made by <a href="http://oodavid.com" target="_blank">oodavid.com</a></p>
+					<h2>Drawing</h2>
+					<p>Click and drag to make curves. With a caveat...</p>
+					<ul>
+						<li class="warn">There is a <a href="https://github.com/muaz-khan/RecordRTC/issues/68">bug in RecordRTC</a> where the screen isn't properly recorded while the mouse is held down...</li>
+						<li>...so I've added a workaround, simply hold the ALT key to draw; no need to mousedown!</li>
+						<li>BTW: The &quot;smooth drawing&quot; is based on <a href="http://codetheory.in/html5-canvas-drawing-lines-with-smooth-edges/" target="_blank">this tutorial</a>.</li>
+					</ul>
+					<h2>Color Selection</h2>
+					<p>The logo shows the currently selected color, but there are a number of ways to change color</p>
+					<ul>
+						<li>Click the color icon</li>
+						<li>Use the number keys 0-9</li>
+						<li>TAB and SHIFT+TAB to cycle</li>
+					</ul>
+					<h2>Recording a video</h2>
+					<ul>
+						<li>Click &quot;record&quot; to begin the recording and &quot;stop&quot; when your finished</li>
+						<li>It often takes a while to compile the final recording</li>
+						<li>I've used the <a href="http://recordrtc.org/">RecordRTC</a> project for this</li>
+						<li class="warn">RecordRTC is prone to crashing and your video will often fail to record</li>
+					</ul>
+					<h2>Using a Tablet</h2>
+					<ul>
+						<li>I recommend mapping the following keys:</li>
+						<ul>
+							<li>ALT - to the main pen button to start drawing</li>
+							<li>TAB - to the seondary pen button to cycle colors</li>
+						</ul>
+						<li class="warn">Once the <a href="http://caniuse.com/#feat=pointer" target="_blank">pointer API</a> is more widely supported we'll be able to use the pen pressure and tilt to make more fluid drawings using the tablet.</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
+	<p>ffmpeg -i kdv.webm -i kda.wav -map 0:0 -map 1:0 -vcodec copy output.webm</p>
+	<p class="warn">Newer versions of ffmpeg accept <strong>-codec copy</strong> instead of <strong>-vcodec...</strong></p>
+	<p>ffmpeg -i kdv.webm -i kda.wav -map 0:0 -map 1:0 -codec copy output.webm</p>
+	<script src="./screenshot.js"></script>
+	<script src="./RecordRTC.js"></script>
 	<script src="./jquery-1.9.1.min.js"></script>
 	<script src="./script.js"></script>
+	<script src="./ffmpeg_asm.js" async></script>
 </body>
 </html>
