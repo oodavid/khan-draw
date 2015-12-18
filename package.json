@@ -1,0 +1,9 @@
+{
+  "name": "khan-draw",
+  "version": "0.0.1",
+  "description": "Khan Academy Drawing App",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
