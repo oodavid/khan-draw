@@ -36,4 +36,4 @@ canvas  { position: absolute; }
 .scroll::-webkit-scrollbar:horizontal { height: 10px; }
 .scroll::-webkit-scrollbar-thumb      { border-radius: 5px; border: 2px solid #000000; background-color: rgba(156, 181, 59, .5); }
 
-#debug { margin: 10px 0 0 66px; width: 630px; height: 200px; padding: 5px; font-family: monospace; font-size: 12px; line-height: 1.4em; background-color: #111111; }
+#debug { margin: 10px 0 0 66px; width: 630px; height: 250px; padding: 5px; font-family: monospace; font-size: 12px; line-height: 1.4em; background-color: #111111; }
