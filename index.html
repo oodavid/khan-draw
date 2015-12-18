@@ -36,7 +36,7 @@
 		<div id="info-popup">
 			<div id="info-box">
 				<div id="info-close">&times;</div>
-				<div id="info-scroll">
+				<div id="info-scroll" class="scroll">
 					<h1>Khan-Draw</h1>
 					<p>This is just a fun widget to tinker with newish technologies. The idea is to replicate the drawing software used on Khan Academy, except online. Remember kids, imitation is the sincerest form of flattery!</p>
 					<p>Made by <a href="http://oodavid.com" target="_blank">oodavid.com</a></p>
@@ -74,9 +74,10 @@
 			</div>
 		</div>
 	</div>
-	<p>ffmpeg -i kdv.webm -i kda.wav -map 0:0 -map 1:0 -vcodec copy output.webm</p>
-	<p class="warn">Newer versions of ffmpeg accept <strong>-codec copy</strong> instead of <strong>-vcodec...</strong></p>
-	<p>ffmpeg -i kdv.webm -i kda.wav -map 0:0 -map 1:0 -codec copy output.webm</p>
+	<div id="debug" class="scroll">
+		<div>Khan-Draw v.0.whatever</div>
+		<div>---------</div>
+	</div>
 	<script src="./screenshot.js"></script>
 	<script src="./RecordRTC.js"></script>
 	<script src="./jquery-1.9.1.min.js"></script>

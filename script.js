@@ -26,7 +26,6 @@ console.log('todo: get ffmpeg.js working :)');
 	function setColor(color){
 		ctx2.strokeStyle = color;
 		ctx2.fillStyle   = color;
-		ctx2.shadowColor = color;
 		$('#logo').css('background-color', color);
 	}
 	// Countdown
@@ -64,8 +63,7 @@ console.log('todo: get ffmpeg.js working :)');
 		navigator.getUserMedia({ audio: true }, function(stream) {
 			recordAudio = RecordRTC(stream, {
 				type: 'audio',
-				numberOfAudioChannels: 1
-				// recorderType: StereoAudioRecorder, // force WebAudio for all browsers even for Firefox/MS-Edge
+				recorderType: StereoAudioRecorder // force WebAudio for all browsers even for Firefox/MS-Edge
 			});
 			recordAudio.initRecorder(function() {
 				canvasRecorder.startRecording();
@@ -85,14 +83,15 @@ console.log('todo: get ffmpeg.js working :)');
 		$('#start').show();
 		stopTimer();
 		// Stop the audio + video
-		recordAudio.stopRecording(function(urlA){
-			canvasRecorder.stopRecording(function(urlV){
-				window.open(urlA);
-				window.open(urlV);
+		recordAudio.stopRecording(function(){
+			canvasRecorder.stopRecording(function(){
+            	convertStreams(canvasRecorder.blob, recordAudio.blob);
+				// window.open(urlA);
+				// window.open(urlV);
 			});
 		});
 	}
-	// Timer 12:34:56
+	// Timer - 12:34:56
 	var startTime;
 	var timerInterval;
 	function startTimer(){
@@ -121,6 +120,7 @@ console.log('todo: get ffmpeg.js working :)');
 	function setVolumePct(pct){
 		$('#volume').css('width', pct+'%');
 	}
+	// Popup
 	function showInfo(){
 		$('#info-popup').show();
 	}
@@ -141,20 +141,17 @@ console.log('todo: get ffmpeg.js working :)');
 	}
 	
 	
+
 	// Reference both canvases, define the initial stroke
 	var canvas  = document.querySelector('#canvas');
 	var ctx     = canvas.getContext('2d');
 	var canvas2 = document.querySelector('#canvas2');
 	var ctx2    = canvas2.getContext('2d');
-		ctx2.lineWidth   = 2;
+		ctx2.lineWidth   = 3;
 		ctx2.lineJoin    = 'round';
 		ctx2.lineCap     = 'round';
 		ctx2.strokeStyle = 'blue';
 		ctx2.fillStyle   = 'blue';
-		ctx2.shadowColor = 'blue';
-		ctx2.shadowBlur  = 1;
-		ctx2.shadowOffsetX = 0;
-		ctx2.shadowOffsetY = 0;
 	// For tracking the state
 	var mouseX    = Infinity;
 	var mouseY    = Infinity;
@@ -256,6 +253,95 @@ console.log('todo: get ffmpeg.js working :)');
 			points[i + 1].y
 		);
 		ctx2.stroke();
+	}
+
+
+
+
+
+
+
+	// Merge via FFMPEG
+	var worker;
+	function convertStreams(videoBlob, audioBlob) {
+	    var vab;
+	    var aab;
+	    var buffersReady;
+	    var workerReady;
+	    var posted = false;
+		if(!worker){
+			worker = new Worker("worker.js");
+		}
+	    var fileReader1 = new FileReader();
+	    fileReader1.onload = function() {
+	        vab = this.result;
+	        if(aab){
+	        	buffersReady = true;
+	        }
+	        if(buffersReady && workerReady && !posted){
+	        	postMessage()
+	        };
+	    };
+	    var fileReader2 = new FileReader();
+	    fileReader2.onload = function() {
+	        aab = this.result;
+	        if(vab){
+	        	buffersReady = true;
+	        }
+	        if(buffersReady && workerReady && !posted){
+	        	postMessage();
+	        }
+	    };
+	    fileReader1.readAsArrayBuffer(videoBlob);
+	    fileReader2.readAsArrayBuffer(audioBlob);
+	    worker.onmessage = function(event){
+	        var message = event.data;
+	        if (message.type == "ready") {
+	        	log('ffmpeg_asm.js has been loaded');
+	            workerReady = true;
+	            if (buffersReady)
+	                postMessage();
+	        } else if (message.type == "stdout") {
+	            log(message.data);
+	        } else if (message.type == "start") {
+	        	log('ffmpeg_asm.js has started working');
+	        } else if (message.type == "done") {
+	            log(JSON.stringify(message));
+	            var result = message.data[0];
+	            log(JSON.stringify(result));
+	            var blob = new Blob([result.data], {
+	                type: 'video/mp4'
+	            });
+	            log(JSON.stringify(blob));
+	            PostBlob(blob);
+	        }
+	    };
+	    var postMessage = function(){
+	        posted = true;
+	        worker.postMessage({
+	            type: 'command',
+	            arguments: [
+					'-i', 'video.webm',
+					'-i', 'audio.wav',
+					'-vcodec', 'copy',
+					'-strict', '-2',
+					'khandraw.webm'
+	            ],
+	            files: [
+	                { name: 'video.webm', data: new Uint8Array(vab) },
+	                { name: 'audio.wav',  data: new Uint8Array(aab) }
+	            ]
+	        });
+	    };
+	}
+	var h2 = document.querySelector('h2');
+	function PostBlob(blob) {
+		log('opening page...');
+		window.open(URL.createObjectURL(blob));
+	}
+	function log(message) {
+		$('#debug').append($('<div>').text(message));
+		$('#debug')[0].scrollTop = $('#debug')[0].scrollHeight;
 	}
 
 }());

@@ -6,6 +6,7 @@ div.clear { clear: both; }
 a { color: #9CB53B; text-decoration: none; }
 h1, h2, p { margin: 10px; }
 li { margin: 10px 0; }
+
 /* Toolbar */
 #tools        { position: absolute; top: 0; left: 0; width: 66px; bottom: 0; text-align: center; }
 #tools img    { float: left; }
@@ -27,8 +28,12 @@ canvas  { position: absolute; }
 #info-popup { display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.8); }
 #info-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #000000; box-shadow: 0 0 15px 1px #9CB53B; border-radius: 5px; }
 #info-close { position: absolute; top: 5px; right: 15px; width: 40px; height: 20px; line-height: 20px; border-radius: 10px; background-color: #9CB53B; cursor: pointer; text-align: center; }
-#info-scroll { width: 400px; max-height: 500px; padding: 1px; overflow-y: auto; overflow-x: hidden; }
-#info-scroll::-webkit-scrollbar            { -webkit-appearance: none; }
-#info-scroll::-webkit-scrollbar:vertical   { width: 10px; }
-#info-scroll::-webkit-scrollbar:horizontal { height: 10px; }
-#info-scroll::-webkit-scrollbar-thumb      { border-radius: 5px; border: 2px solid #000000; background-color: rgba(156, 181, 59, .5); }
+#info-scroll { width: 400px; max-height: 500px; padding: 1px; }
+
+.scroll { overflow: auto; }
+.scroll::-webkit-scrollbar            { -webkit-appearance: none; }
+.scroll::-webkit-scrollbar:vertical   { width: 10px; }
+.scroll::-webkit-scrollbar:horizontal { height: 10px; }
+.scroll::-webkit-scrollbar-thumb      { border-radius: 5px; border: 2px solid #000000; background-color: rgba(156, 181, 59, .5); }
+
+#debug { margin: 10px 0 0 66px; width: 630px; height: 200px; padding: 5px; font-family: monospace; font-size: 12px; line-height: 1.4em; background-color: #111111; }
