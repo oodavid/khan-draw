@@ -1,5 +1,3 @@
-console.log('todo: prevent color change during draw');
-console.log('todo: get ffmpeg.js working :)');
 (function() {
 	// Tools, Shortcuts, Auto-Click #1
 	$(document).ready(function(e){
@@ -8,7 +6,7 @@ console.log('todo: get ffmpeg.js working :)');
 		$('#start').on('click', startCountdown);
 		$('#count').on('click', cancelCountdown);
 		$('#stop').on('click', stopRecording);
-		$('#info').on('click', showInfo);
+		$('.info').on('click', showInfo);
 		$('#info-close').on('click', hideInfo);
 		storeCanvasPosition();
 		$(document).on('keydown', keyDown);
@@ -16,6 +14,12 @@ console.log('todo: get ffmpeg.js working :)');
 		$(document).on('mousemove',  updateDrawing);
 		$(document).on('mouseup',    endDrawing);
 		$('.color:contains("1")').click();
+		// Todo list
+		log('todo: prevent color change during draw');
+		log('todo: tap to create a dot fails when using the ALT modifier');
+		log('todo: automatically upload to youtube');
+		log('todo: get a better SSL certificate from letsencrypt.org');
+		log('---------')
 	});
 	// Color selection
 	var selectedColor = null; // A number from 0-9
@@ -59,6 +63,7 @@ console.log('todo: get ffmpeg.js working :)');
 		});
 	}
 	function startRecording(){
+		log('Requesting microphone access...');
 		// Request access to the microphone, then begin
 		navigator.getUserMedia({ audio: true }, function(stream) {
 			recordAudio = RecordRTC(stream, {
@@ -74,10 +79,11 @@ console.log('todo: get ffmpeg.js working :)');
 			$('#stop').show();
 			startTimer();
 		}, function(error){
-			console.log(error);
+			log(error);
 		});
 	}
 	function stopRecording(){
+		log('Stopping recording...');
 		// UI
 		$('#stop, #count').hide();
 		$('#start').show();
@@ -85,6 +91,7 @@ console.log('todo: get ffmpeg.js working :)');
 		// Stop the audio + video
 		recordAudio.stopRecording(function(){
 			canvasRecorder.stopRecording(function(){
+				log('Merging Video and Audio streams (this may take a moment to begin)');
             	convertStreams(canvasRecorder.blob, recordAudio.blob);
 				// window.open(urlA);
 				// window.open(urlV);
@@ -121,8 +128,9 @@ console.log('todo: get ffmpeg.js working :)');
 		$('#volume').css('width', pct+'%');
 	}
 	// Popup
-	function showInfo(){
+	function showInfo(e){
 		$('#info-popup').show();
+		return false;
 	}
 	function hideInfo(){
 		$('#info-popup').hide();
