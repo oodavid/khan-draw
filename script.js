@@ -19,10 +19,11 @@
 		log('todo: tap to create a dot fails when using the ALT modifier');
 		log('todo: automatically upload to youtube');
 		log('todo: get a better SSL certificate from letsencrypt.org');
-		log('todo: canvas panning');
+		log('todo: canvas panning (just vertical?)');
 		log('todo: cut, copy, paste');
 		log('todo: eraser');
 		log('todo: image upload - maybe a \'clipboard\' sidebar that the user can pre-populate?');
+		log('todo: remove mouse!');
 		log('---------')
 	});
 	// Color selection

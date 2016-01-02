@@ -24,6 +24,7 @@ li { margin: 10px 0; }
 #sketch { position: absolute; top: 0; left: 66px; width: 640px; height: 480px; background-color: #000000; cursor: none; overflow: hidden; }
 canvas  { position: absolute; }
 #cursor { position: absolute; pointer-events: none; }
+#watermark { position: absolute; top: 3px; right: 3px; margin: 0; opacity: 0.3; }
 /* Popup */
 #info-popup { display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.8); }
 #info-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #000000; box-shadow: 0 0 15px 1px #9CB53B; border-radius: 5px; }
