@@ -1,5 +1,11 @@
 #!/bin/bash
-#  Adapted from https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04
+#	Source
+#		https://gist.github.com/oodavid/54cadfb92ff49618797d
+#  	Adapted from
+#		https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04
+# 	Make sure this is added to the crontab, ie:
+# 		sudo crontab -e
+#    	30 2 * * 1 /home/ubuntu/khan-draw/ssl-auto-renew.sh >> /var/log/ssl-auto-renew.log
 
 # Config
 le_path="/home/ubuntu/letsencrypt";
@@ -34,7 +40,7 @@ fi;
 
 # Update the cert
 echo "The certificate for $domain is about to expire. Starting renewal script..."
-$le_path/letsencrypt-auto --test-cert certonly -a webroot --agree-tos --renew-by-default --email $email --webroot-path=$webroot --domains="$domains"
+$le_path/letsencrypt-auto certonly -a webroot --agree-tos --renew-by-default --email $email --webroot-path=$webroot --domains="$domains"
 
 # Reload our service
 echo "Reloading $web_service"
