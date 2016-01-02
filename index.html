@@ -34,10 +34,18 @@
 			<img id="cursor" src="./crosshair.png">
 			<div id="watermark">draw.oodavid.com</div>
 		</div>
-		<div id="info-popup">
-			<div id="info-box">
-				<div id="info-close">&times;</div>
-				<div id="info-scroll" class="scroll">
+		<div id="popup">
+			<div id="popup-box">
+				<div id="popup-close">&times;</div>
+				<div id="warning-content" class="scroll">
+					<h1>Khan-Draw</h1>
+					<p>Before you start playing, it's worth noting that Khan-Draw will only work with a Desktop browser using Chrome! That is:</p>
+					<p><span class="warn">Tablets</span> and <span class="warn">Mobile</span> devices will not be able to draw properly.</p>
+					<p><span class="warn">Firefox</span> and <span class="warn">Internet Explorer</span> can't (currently) record video.</p>
+					<p>Still, it's worth having a tinker!!</p>
+					<p><button>close</button></p>
+				</div>
+				<div id="info-content" class="scroll">
 					<h1>Khan-Draw</h1>
 					<p>This is just a fun widget to tinker with newish technologies. The idea is to replicate the drawing software used on Khan Academy, except online. Remember kids, imitation is the sincerest form of flattery!</p>
 					<p>Made by <a href="http://oodavid.com" target="_blank">oodavid.com</a></p>
@@ -70,6 +78,7 @@
 						</ul>
 						<li class="warn">Once the <a href="http://caniuse.com/#feat=pointer" target="_blank">pointer API</a> is more widely supported we'll be able to use the pen pressure and tilt to make more fluid drawings using the tablet.</li>
 					</ul>
+					<p><button>close</button></p>
 				</div>
 			</div>
 		</div>

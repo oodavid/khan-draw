@@ -7,7 +7,7 @@
 		$('#count').on('click', cancelCountdown);
 		$('#stop').on('click', stopRecording);
 		$('.info').on('click', showInfo);
-		$('#info-close').on('click', hideInfo);
+		$('#popup-close, #popup button').on('click', hideInfo);
 		storeCanvasPosition();
 		$(document).on('keydown', keyDown);
 		$('#sketch').on('mousedown', startDrawing);
@@ -134,11 +134,13 @@
 	}
 	// Popup
 	function showInfo(e){
-		$('#info-popup').show();
+		$('#warning-content').hide();
+		$('#info-content').show();
+		$('#popup').show();
 		return false;
 	}
 	function hideInfo(){
-		$('#info-popup').hide();
+		$('#popup').hide();
 	}
 	// Keyboard
 	function keyDown(e){
