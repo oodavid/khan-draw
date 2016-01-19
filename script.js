@@ -64,7 +64,7 @@
 	function prepareRecorder(){
 		canvasRecorder = RecordRTC($('#sketch')[0], {
 			type: 'canvas',
-			grabMouse: false
+			showMousePointer: false
 		});
 	}
 	function startRecording(){
@@ -242,7 +242,7 @@
 	}
 	function drawCurve(){
 		// Clear before drawing
-		ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
+		ctx2.clearRect(0, 0, canvas.width, canvas.height);
 		// Quadratics after we have 3 points
 		if (points.length < 3) {
 			var b = points[0];
